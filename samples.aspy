@@ -1,0 +1,40 @@
+fib 0 = 1
+fib 1 = 1
+fib :n = ( fib ( n - 1 ) ) + ( fib ( n - 2 ) )
+
+fib 7
+
+
+
+1 factorial = 1
+:n factorial = n - 1 factorial * n
+
+7 factorial
+
+
+
+is :name the best ? = case
+  name == pop
+  yes
+  -true-
+  no
+
+is pop the best ?
+is kik the best ?
+
+
+
+(-- not working --)
+[ :items ] = tail items
+tail ( [ ( ' a b c ) ] )
+
+
+
+முதல் = head
+முதல் ( அ :: ( ஆ :: ( இ :: [] ) ) )
+
+
+
+car :l = head ( tail l  )
+cdr :l = tail ( tail l )
+

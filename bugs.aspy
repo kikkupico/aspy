@@ -1,0 +1,30 @@
+buggy map
+
+
+
+:: ANALYZING... ::
+
+
+:: RESOLVED ::
+
+assigning values to case within not working within function
+- parans not added correctly
+-- doesn't exist in multiret
+
+-- '~' remains in scope; 'x' doesn't -- 
+
+:a , :b =
+  x = 1
+  :a ~ :b = a + 1
+  a ~ b
+
+1 , 2
+1 ~ 2
+x
+
+ fix 1 ( failed) was using append for function defs; append mutated existing object; changing this leads to infinite recursion
+
+  doesn't exist in multiret
+
+nested case not working ?
+resolved by slightly disambiguating eval returns

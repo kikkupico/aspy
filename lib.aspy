@@ -1,0 +1,185 @@
+-true- and :q = q
+-false- and :q = -false-
+
+-true- or :q = -true-
+-false- or :q = q
+
+not -true- = -false-
+not -false- = -true-
+
+
+
+:p to :q = case
+  p == q
+  p :: []
+  -true-
+  p :: ( ( p + 1 ) to q )
+
+item 0 of :l = head l
+item :n of :l = item ( n - 1 ) of ( tail l )  
+
+:p ++ :q =
+  case
+    p == []
+    q :: []
+    tail p == []
+    head p :: ( q :: [] )
+    -true-
+    head p :: ( tail p ++ q )
+
+:p , :q =
+  case
+    word p ?
+    p :: ( q :: [] )
+    -true-
+    p ++ q
+
+[ :x = partial-list ( x :: [] )
+partial-list :l ] = l
+partial-list :l :x = partial-list ( l ++ x )
+
+length of :l =
+  case
+    word l ?
+    0
+    l == []
+    0
+    -true-
+    1 + ( length of ( tail l ) )
+
+
+
+fill :pattern with :values =
+  case 
+    pattern == []
+    ()
+    -true-
+    case 
+      head pattern == _
+      case        
+        tail values == []
+        head values ( fill ( tail pattern ) with values )
+        -true-
+        head values ( fill ( tail pattern ) with ( tail values ) )
+      -true- 
+      head pattern ( fill ( tail pattern ) with values )
+
+fill ( [ _ + _ + _ ] ) with ( 1 , 2 , 4 )
+
+:pattern each of :l =
+  case
+    l == []
+    []
+    pattern == []
+    l
+    -true-
+    fill pattern with ( ( head l ) :: [] ) :: ( pattern each of ( tail l ) )
+
+[ 7 * _ ] each of ( 1 , 2 , 3 )
+
+
+:n times :x =
+  case
+    n == 0
+    ()
+    n == 1
+    [ x ]
+    -true-
+    x :: ( ( n - 1 ) times x )
+
+
+
+NEW LIST FNS
+
+
+:n times :x =
+  case
+    n == 0
+    ()
+    n == 1
+    [ x ]
+    -true-
+    x :: ( ( n - 1 ) times x )
+
+:p to :q = case
+  p == q
+  p  ( :: [] )
+  -true-
+  p ( :: ( ( p + 1 ) to q ) )
+
+:p ++ :q =
+  case
+    p == []
+    q ( :: [] )
+    tail p == []
+    head p ( :: ( q ( :: [] ) ) )
+    -true-
+    head p ( :: ( tail p ++ q ) )
+
+:p , :q =
+  case
+    word p ?
+    p ( :: ( q ( :: [] ) ) )
+    -true-
+    p ++ q
+
+length of :l =
+  case
+    word l ?
+    0
+    l == []
+    0
+    -true-
+    1 + ( length of ( tail l ) )
+
+
+[ :x = partial-list ( x ( :: [] ) )
+partial-list :l ] = l
+partial-list :l :x = partial-list ( l ++ x )
+
+
+fill :pattern with :values =
+  case 
+    pattern == []
+    ()
+    -true-
+    case 
+      head pattern ( == _ )
+      case        
+        tail values == []
+        head values ( fill ( tail pattern ) with values )
+        -true-
+        head values ( fill ( tail pattern ) with ( tail values ) )
+      -true- 
+      head pattern ( fill ( tail pattern ) with values )
+
+:l map :pattern =
+  case
+    l == []
+    []
+    pattern == []
+    l
+    -true-
+    ( fill pattern with ( ( head l ) ( :: [] ) ) ) ( :: ( ( tail l ) map pattern ) )
+
+
+:list filter :pattern =
+  case
+    list == []
+    []
+    -true-
+    case
+      fill pattern with ( ( head list ) :: [] ) == -true-
+      ( head list ) :: ( tail list filter pattern )
+      -true-
+      tail list filter pattern
+
+
+:list reduce :init :pattern =
+  case
+    list == []
+    init
+    -true-    
+    tail list reduce ( fill pattern with ( [ init ( head list ) ] ) ) pattern
+
+( 0 to 7 ) map ( [ _ + 7 ] ) filter ( [ _ == 7 ] ) reduce 0 ( [ _ + _ ] )
