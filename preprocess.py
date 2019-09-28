@@ -41,7 +41,22 @@ def normalize_parans(s):
     return res.strip()
 
 
+
+def add_libs(s):
+  res = ""
+  for line in s.strip().split('\n'):
+    if line.startswith('refer'):
+      library = line.split()[1]
+      with open(library+'.aspy') as f:
+        res = res + (f.read()) + '\n'
+    else:
+      res = res + line + '\n'
+  return res
+ 
+
+
 def preprocess(s, pretty=False):
+    s = add_libs(s)
     s = normalize_parans(s)
     res = '(\n'
     lines = s.strip().split('\n')

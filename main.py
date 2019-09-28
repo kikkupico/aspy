@@ -20,124 +20,10 @@ match x [] not working
 
 prog = '''
 
+refer lib
 
+quicksort ( [ 1 9 3 5 2 6 ] )
 
-:n times :x =
-  case
-    n == 0
-    ()
-    n == 1
-    [ x ]
-    -true-
-    x :: ( ( n - 1 ) times x )
-
-:p to :q = case
-  p == q
-  p  ( :: [] )
-  -true-
-  p ( :: ( ( p + 1 ) to q ) )
-
-:p ++ :q =
-  case
-    p == []
-    q ( :: [] )
-    tail p == []
-    head p ( :: ( q ( :: [] ) ) )
-    -true-
-    head p ( :: ( tail p ++ q ) )
-
-:p , :q =
-  case
-    word p ?
-    p ( :: ( q ( :: [] ) ) )
-    -true-
-    p ++ q
-
-length of :l =
-  case
-    word l ?
-    0
-    l == []
-    0
-    -true-
-    1 + ( length of ( tail l ) )
-
-
-[ :x = partial-list ( x ( :: [] ) )
-partial-list :l ] = l
-partial-list :l :x = partial-list ( l ++ x )
-
-
-fill :pattern with :values =
-  case 
-    pattern == []
-    ()
-    -true-
-    case 
-      head pattern ( == _ )
-      case        
-        tail values == []
-        head values ( fill ( tail pattern ) with values )
-        -true-
-        head values ( fill ( tail pattern ) with ( tail values ) )
-      -true- 
-      head pattern ( fill ( tail pattern ) with values )
-
-:l map :pattern =
-  case
-    l == []
-    []
-    pattern == []
-    l
-    -true-
-    ( fill pattern with ( ( head l ) ( :: [] ) ) ) ( :: ( ( tail l ) map pattern ) )
-
-
-:list filter :pattern =
-  case
-    list == []
-    []
-    -true-
-    case
-      fill pattern with ( ( head list ) :: [] ) == -true-
-      ( head list ) :: ( tail list filter pattern )
-      -true-
-      tail list filter pattern
-
-
-:list foldl :init :pattern =
-  case
-    list == []
-    init
-    -true-    
-    tail list foldl ( fill pattern with ( [ init ( head list ) ] ) ) pattern
-
-
-:list foldr :pattern :init =
-  case
-    list == []
-    init
-    -true-    
-    tail list foldr ( fill pattern with ( [ ( head list ) init ] ) ) pattern
-
-:current-index :seen :remaining ~replaced ~with :x at :n =
-  case
-    current-index == n
-    seen + ( x :: ( tail remaining ) )
-    -true-
-    ( current-index + 1 ) ( seen ++ ( head remaining ) ) ( tail remaining ) ~replaced ~with x at n
-
-:list replaced at :n with :x = 0 [] list ~replaced ~with x at n
-
-quicksort [] = []
-quicksort :list =
-  pivot = head list
-  rest = tail list
-  lesser = quicksort ( rest filter ( [ _ <= pivot ] ) )
-  greater = quicksort ( rest filter ( [ _ > pivot ] ) )
-  lesser + ( [ pivot ] ) + greater
-
-quicksort ( [ 1 6 1 5 3 6 3 ] )
 
 '''
 
@@ -303,4 +189,3 @@ def test_lang():
 
 # test_lang()
 print(evaluate(ast(preprocess(prog))))
-
