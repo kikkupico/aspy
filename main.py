@@ -21,9 +21,15 @@ match x [] not working
 prog = '''
 
 refer lib
+refer chess
 
-quicksort ( [ 1 9 3 5 2 6 ] )
+quicksort ( [ 1 9 3 5 2 6 ] ) map ( [ _ + 7 ] ) filter ( [ _ <= 10 ] ) 
+piece at row 0 col 0 on new-game-board
 
+0 factorial = 1
+:n factorial = n * ( n - 1 factorial )
+
+( 1 to 7 ) map ( [ _ factorial ] )
 
 '''
 

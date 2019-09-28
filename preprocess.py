@@ -47,7 +47,7 @@ def add_libs(s):
   for line in s.strip().split('\n'):
     if line.startswith('refer'):
       library = line.split()[1]
-      with open(library+'.aspy') as f:
+      with open(library+'.aspy', encoding='utf-8') as f:
         res = res + (f.read()) + '\n'
     else:
       res = res + line + '\n'

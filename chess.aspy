@@ -55,16 +55,6 @@ piece along :dir from row :r col :c on :board =
     -true-
     piece at row ( rowstep dir r ) col ( colstep dir c ) on board
 
-
-piece along S from row 3 col 3 on new-game-board
-piece along N from row 3 col 3 on new-game-board
-piece along E from row 3 col 3 on new-game-board
-piece along W from row 3 col 3 on new-game-board
-piece along NW from row 3 col 3 on new-game-board
-piece along SW from row 3 col 3 on new-game-board
-piece along NE from row 3 col 3 on new-game-board
-piece along SE from row 3 col 3 on new-game-board
-
 :board row :r col :c under attack ? =
   piece along S from row r col c on board == ♖
   or
@@ -74,4 +64,3 @@ piece along SE from row 3 col 3 on new-game-board
   or
   piece along W from row r col c on board == ♖
 
-new-game-board row 6 col 0 under attack ?
