@@ -175,11 +175,26 @@ fill :pattern with :values =
       tail list filter pattern
 
 
-:list reduce :init :pattern =
+:list foldl :init :pattern =
   case
     list == []
     init
     -true-    
-    tail list reduce ( fill pattern with ( [ init ( head list ) ] ) ) pattern
+    tail list foldl ( fill pattern with ( [ init ( head list ) ] ) ) pattern
 
-( 0 to 7 ) map ( [ _ + 7 ] ) filter ( [ _ == 7 ] ) reduce 0 ( [ _ + _ ] )
+
+:list foldr :pattern :init =
+  case
+    list == []
+    init
+    -true-    
+    tail list foldr ( fill pattern with ( [ ( head list ) init ] ) ) pattern
+
+:current-index :seen :remaining ~replaced ~with :x at :n =
+  case
+    current-index == n
+    seen + ( x :: ( tail remaining ) )
+    -true-
+    ( current-index + 1 ) ( seen ++ ( head remaining ) ) ( tail remaining ) ~replaced ~with x at n
+
+:list replaced at :n with :x = 0 [] list ~replaced ~with x at n

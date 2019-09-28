@@ -22,7 +22,7 @@ def match(l, pattern):
             i += 1
             j += 1
             continue
-        elif pattern[j] == l[i]:
+        elif pattern[j] == l[i] or ( pattern[j] == '[]' and l[i] == '-nil-' ):
             i += 1
             j += 1
             continue
