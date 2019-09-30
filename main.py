@@ -12,7 +12,7 @@ disambiguate pattern passing order of eval
 can pass expr ?
 folds are very slow
 improve general performance 
-match x [] not working
+match x [] not working - done
 
 '''
 
@@ -21,15 +21,25 @@ match x [] not working
 prog = '''
 
 refer lib
-refer chess
 
-quicksort ( [ 1 9 3 5 2 6 ] ) map ( [ _ + 7 ] ) filter ( [ _ <= 10 ] ) 
-piece at row 0 col 0 on new-game-board
+fib 0 = 1
+fib 1 = 1
+fib :n = ( fib ( n - 1 ) ) + ( fib ( n - 2 ) )
 
-0 factorial = 1
-:n factorial = n * ( n - 1 factorial )
 
-( 1 to 7 ) map ( [ _ factorial ] )
+~fastfib :n-2 :n-1 :p :q =
+  case
+    p == q
+    n-2 + n-1
+    -true-
+    ~fastfib n-1 ( n-2 + n-1 ) ( p + 1 ) q
+
+fastfib 0 = 1
+fastfib 1 = 1
+fastfib :n = ~fastfib 1 1 1 ( n - 1 )
+
+fastfib 100
+
 
 '''
 
@@ -39,7 +49,7 @@ global_context = {'[]':'-nil-','[ ]':'-nil-', '()':(),'( )':()}
 def meaning(e, ev, context):
   if not isinstance(e, tuple):
     return None
-  else:
+  else:      
     if match(e,['word', '_','?']):
       if not isinstance(e[1], list) and not isinstance(e[1], tuple):
         return '-true-'
@@ -113,8 +123,8 @@ def evaluate(e, context=global_context):
         if part == '=':
           side = right
           continue
-        side.append('-nil-' if part =='[]' else part)      
-      params = [ x[1:] for x in left if isinstance(x, str) and x[0]==':'] 
+        side.append('-nil-' if part =='[]' else part)
+      params = [ x[1:] for x in left if isinstance(x, str) and x[0]==':']
       if (len(params)==0):
         if(len(left)==1):
           context[left[0]]=evaluate(tuple(right), context)

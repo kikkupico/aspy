@@ -4,6 +4,15 @@ fib :n = ( fib ( n - 1 ) ) + ( fib ( n - 2 ) )
 
 fib 7
 
+fastfib :n-2 :n-1 :p :q =
+  case
+    p == q
+    n-2 + n-1
+    -true-
+    fastfib n-1 ( n-2 + n-1 ) ( p + 1 ) q
+
+( 1 to 25 ) map ( [ fastfib 0 1 1 _ ] )
+
 
 
 1 factorial = 1
