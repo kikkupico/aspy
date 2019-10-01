@@ -19,10 +19,16 @@ def add_pattern_with_sig(s, p, tree, end):
 def add_pattern(p, tree, end): add_pattern_with_sig(p, p, tree, end)
 
 
+def do_add(e):
+    e = [ [] if x == '-nil-' else x for x in e ]
+    return e[0]+e[1]
+
 add_pattern(('_','==','_'), global_pattern_tree, lambda e:'-true-' if e[0]==e[1] else '-false-')
-add_pattern(('_','+','_'), global_pattern_tree, lambda e:e[0]+e[1])
+add_pattern(('_','+','_'), global_pattern_tree, lambda e:do_add(e))
 add_pattern(('_','-','_'), global_pattern_tree, lambda e:e[0]-e[1])
 add_pattern(('_','*','_'), global_pattern_tree, lambda e:e[0]*e[1])
+add_pattern(('_','<=','_'), global_pattern_tree, lambda e:'-true-' if e[0]<=e[1]else '-false-')
+add_pattern(('_','>','_'), global_pattern_tree, lambda e:'-true-' if e[0]>e[1] else '-false-')
 add_pattern(('_','/','_'), global_pattern_tree, lambda e:e[0]//e[1])
 add_pattern(('_','::','-nil-'), global_pattern_tree, lambda a:[a[0]])
 add_pattern(('_','::','_'), global_pattern_tree, lambda e:[e[0]]+e[1])
@@ -85,10 +91,8 @@ def evaluate(e, tree=global_pattern_tree,values=global_values):
                 continue
             if side==left and isinstance(word, str) and ':' in word:
                 func = True
-            side.append(word)
-        if len(left)==1:
-            print('d 90', right, values, tree)
-            print('d 91', evaluate(tuple(right), tree, values))
+            side.append('-nil-' if word == '[]' else word )
+        if len(left)==1:            
             if len(right)==1:
                 values[left[0]]=evaluate(right[0], tree, values)
             else:
@@ -195,19 +199,7 @@ prog = '''
 
 refer lib
 
-
-fib 0 = 1
-fib 1 = 1
-fib :n = ( fib ( n - 1 ) ) + ( fib ( n - 2 ) )
-
-fastfib :n-2 :n-1 :p :q =
-  case
-    p == q
-    n-2 + n-1
-    -true-
-    fastfib n-1 ( n-2 + n-1 ) ( p + 1 ) q
-
-1 to 17 map ( [ fib _ ] )
+quicksort ( [ 7 1 2 4 ] )
 
 '''
 
