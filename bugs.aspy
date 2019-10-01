@@ -1,3 +1,9 @@
+will this work?
+
+a :b :c = b + c
+a :b :c :d = b + c + d
+
+filter very slow
 
 :: ANALYZING... ::
 

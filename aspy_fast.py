@@ -55,14 +55,14 @@ def match(l, acc, tree, values):
                     # print('fn match', pars, acc)
                     return FULL, tree[word][1](pars)
             else:
-                subtree = { **subtree, **tree[word]}     
+                subtree = { **tree[word], **subtree}
     if subtree != {}:
         return match(l[1:], acc, subtree, values)        
     else:
         return PARTIAL, tree, acc
 
 def params_from(vals, expr):
-    param_names = [ x[1:] for x in expr if ':' in x ]    
+    param_names = [ x[1:] for x in expr if isinstance(x, str) and ':' in x ]    
     return { param_names[i]:vals[i] for i in range(len(param_names))}
 
 def evaluate(e, tree=global_pattern_tree,values=global_values):
@@ -183,7 +183,7 @@ tests = [
 (' ( 3 + 4 + 10 - 10 * 3 / 7 + 4 ) ', 7),
 (' 3 + 4 * 3  / ( 1 + 2 ) ', 7),
 (' 3 + 4 * 3  / ( 1 + 2 ) ', 7),
-# (' ( 1 + 1 1 )', (2, 1))
+(' ( 1 + 1 1 )', (2, 1))
 ]
 
 def test_lang():
@@ -199,7 +199,7 @@ prog = '''
 
 refer lib
 
-quicksort ( [ 7 1 2 4 ] )
+item 0 of ( 1 to 10 )
 
 '''
 

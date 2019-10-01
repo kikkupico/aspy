@@ -20,15 +20,9 @@ match x [] not working - done
 
 prog = '''
 
-fib 0 = 1
-fib 1 = 1
-fib :n = ( fib ( n - 2 ) ) + ( fib ( n - 1 ) )
+refer lib
 
-0 factorial = 1
-:n factorial = n - 1 factorial * n 
-
-fib 24
-
+( 1 to 12 ) filter ( [ _ > 11 ] )
 
 '''
 
