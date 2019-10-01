@@ -32,7 +32,7 @@ add_pattern(('tail','_'), global_pattern_tree, lambda e:e[0][1:])
 
 FULL, PARTIAL = 'f','p'
 
-def match(l, acc, tree):    
+def match(l, acc, tree, values):    
     subtree = {}
     added = False
     if l == ():
@@ -44,16 +44,22 @@ def match(l, acc, tree):
                 added = True
             if isinstance(tree[word],tuple) and callable(tree[word][1]):                
                 if len(l)==1:                    
-                    pars = [acc[i] for i in range(len(acc)) if tree[word][0][i]=='_']                            
+                    pars = [acc[i] for i in range(len(acc)) if tree[word][0][i]=='_']
+                    # print('fn match', pars, acc)
                     return FULL, tree[word][1](pars)
             else:
                 subtree = { **subtree, **tree[word]}     
     if subtree != {}:
-        return match(l[1:], acc, subtree)        
+        return match(l[1:], acc, subtree, values)        
     else:
         return PARTIAL, tree, acc
 
+def params_from(vals, expr):
+    param_names = [ x[1:] for x in expr if ':' in x ]    
+    return { param_names[i]:vals[i] for i in range(len(param_names))}
+
 def evaluate(e, tree=global_pattern_tree,values=global_values):
+    # print('fn evaluate' ,values)
     if '=' in e and len(e)>2:
         left = []
         right = []
@@ -63,9 +69,9 @@ def evaluate(e, tree=global_pattern_tree,values=global_values):
             if word == '=':                
                 side = right
                 continue
-            if side==left and ':' in word:
+            if side==left and isinstance(word, str) and ':' in word:
                 func = True
-            side.append(word)       
+            side.append(word)
         if len(left)==1:
             if len(right)==1:
                 values[left[0]]=right[0]
@@ -73,10 +79,11 @@ def evaluate(e, tree=global_pattern_tree,values=global_values):
                 values[left[0]]=tuple(right)
         else:
             if func:
-                pattern = [ '_' if ':' in x else x for x in left]
-                add_pattern(tuple(pattern), tree, lambda e: 'got func')
+                pattern = [ '_' if ':' in x else x for x in left]                
+                # print('dp', params_from(e,left))
+                add_pattern(tuple(pattern), tree, lambda e: evaluate(tuple(right),global_pattern_tree, {**values,**params_from(e,left)}))
                 return ()
-            add_pattern(tuple(left),tree,lambda e:tuple(right))            
+            add_pattern(tuple(left),tree,lambda e:tuple(right))
         return ()
 
     remaining = e
@@ -85,9 +92,9 @@ def evaluate(e, tree=global_pattern_tree,values=global_values):
     acc = ()    
     while remaining != ():        
         if not isinstance(remaining[0],list) and remaining[0] in values:
-            current = (*current, evaluate((values[remaining[0]],),global_pattern_tree))       
+            current = (*current, evaluate((values[remaining[0]],),global_pattern_tree, values))       
         elif isinstance(remaining[0],tuple):            
-            sub = evaluate(remaining[0], global_pattern_tree)
+            sub = evaluate(remaining[0], global_pattern_tree, values)
             if isinstance(sub, tuple):
                 current = (*current,*sub)
             else:
@@ -97,14 +104,18 @@ def evaluate(e, tree=global_pattern_tree,values=global_values):
         
         remaining = remaining[1:]
         
-        matching = match(current,acc,tree)
+        matching = match(current,acc,tree, values)
         if matching[0] == PARTIAL:
             res = (*res, *current)
             current = ()
             tree = matching[1]
             acc = matching[2]
-        else:
-            current = matching[1:]
+        else:        
+            if isinstance(matching[1], tuple):
+                current = matching[1]
+            else:
+                current = (matching[1],)
+            
             res = current
             tree = global_pattern_tree
             acc = ()
@@ -155,12 +166,19 @@ def test_lang():
     print(res, test[1])
     assert test[1] == res
 
-test_lang()
+# test_lang()
 
 prog = '''
 
-1 == 1 == -true-
+fib 0 = 1
+fib 1 = 1
+fib :n = ( fib ( n - 2 ) ) + ( fib ( n - 1 ) )
+
+0 factorial = 1
+:n factorial = n - 1 factorial * n 
+
+fib 7
 
 '''
 
-# print(evaluate(ast(preprocess(prog))))
+print(evaluate(ast(preprocess(prog))))
