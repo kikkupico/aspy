@@ -3,7 +3,7 @@ from aspy_ast import ast
 import copy
 
 global_pattern_tree = {}
-global_values = {'[]':'-nil-'}
+global_values = {'[]':'-nil-','[ ]':'-nil-','()':(),'( )':()}
 
 def add_pattern_with_sig(s, p, tree, end):
     if p == ():
@@ -26,8 +26,8 @@ add_pattern(('_','*','_'), global_pattern_tree, lambda e:e[0]*e[1])
 add_pattern(('_','/','_'), global_pattern_tree, lambda e:e[0]//e[1])
 add_pattern(('_','::','-nil-'), global_pattern_tree, lambda a:[a[0]])
 add_pattern(('_','::','_'), global_pattern_tree, lambda e:[e[0]]+e[1])
-add_pattern(('head','_'), global_pattern_tree, lambda e:e[0][0])
-add_pattern(('tail','_'), global_pattern_tree, lambda e:e[0][1:])
+add_pattern(('head','_'), global_pattern_tree, lambda e: () if e[0]=='-nil-' else e[0][0])
+add_pattern(('tail','_'), global_pattern_tree, lambda e:'-nil-' if e[0][1:]==[] else e[0][1:])
 
 
 FULL, PARTIAL = 'f','p'
@@ -43,7 +43,8 @@ def match(l, acc, tree, values):
                 acc = *acc,*(l[0],)                
                 added = True
             if isinstance(tree[word],tuple) and callable(tree[word][1]):                
-                if len(l)==1:                    
+                if len(l)==1:
+                    # print('fn match', acc, tree[word][0])
                     pars = [acc[i] for i in range(len(acc)) if tree[word][0][i]=='_']
                     # print('fn match', pars, acc)
                     return FULL, tree[word][1](pars)
@@ -59,8 +60,21 @@ def params_from(vals, expr):
     return { param_names[i]:vals[i] for i in range(len(param_names))}
 
 def evaluate(e, tree=global_pattern_tree,values=global_values):
-    # print('fn evaluate' ,values)
-    if '=' in e and len(e)>2:
+    if not isinstance(e, tuple) and not isinstance(e, list):
+        if e in values:
+            return values[e]
+        else:
+            return e
+    e_len = len(e)
+    if e_len>0 and e[0]=='case':
+      cases = e[1:]
+      for i in range(len(cases)):
+        if evaluate(cases[i] ,tree, values) == '-true-':
+          return evaluate(cases[i+1], tree, values)
+        else:
+          i += 2
+      return ()
+    if '=' in e and e_len>2:
         left = []
         right = []
         side = left
@@ -79,8 +93,8 @@ def evaluate(e, tree=global_pattern_tree,values=global_values):
                 values[left[0]]=tuple(right)
         else:
             if func:
-                pattern = [ '_' if ':' in x else x for x in left]                
-                # print('dp', params_from(e,left))
+                # print('evaluate, func', left)
+                pattern = [ '_' if isinstance(x, str) and ':' in x else x for x in left]                                
                 add_pattern(tuple(pattern), tree, lambda e: evaluate(tuple(right),global_pattern_tree, {**values,**params_from(e,left)}))
                 return ()
             add_pattern(tuple(left),tree,lambda e:tuple(right))
@@ -96,9 +110,9 @@ def evaluate(e, tree=global_pattern_tree,values=global_values):
         elif isinstance(remaining[0],tuple):            
             sub = evaluate(remaining[0], global_pattern_tree, values)
             if isinstance(sub, tuple):
-                current = (*current,*sub)
-            else:
-                current = (*current,sub)        
+                current = *current,*sub
+            else:                
+                current = *current,sub                
         else:
             current = (*current, remaining[0])
         
@@ -107,15 +121,16 @@ def evaluate(e, tree=global_pattern_tree,values=global_values):
         matching = match(current,acc,tree, values)
         if matching[0] == PARTIAL:
             res = (*res, *current)
+            # print('ev partial', res, current)
             current = ()
             tree = matching[1]
             acc = matching[2]
-        else:        
+        else:            
             if isinstance(matching[1], tuple):
                 current = matching[1]
             else:
                 current = (matching[1],)
-            
+
             res = current
             tree = global_pattern_tree
             acc = ()
@@ -141,13 +156,13 @@ tests = [
 (' ( 1 2 ( 3 :: [] ) ) ', ( 1, 2, [3])),
 (' ( head ( 1 :: [] ) ) ', 1),
 (' ( head ( 1 :: ( 2 :: [] ) ) ) ', 1),
-(' ( tail ( 1 :: [] ) ) ', [] ),
+(' ( tail ( 1 :: [] ) ) ', '-nil-' ),
 (' ( tail ( 1 :: ( 2 :: [] ) ) ) ', [2]),
-# ('( case ( 1 == 1 ) in )','in'),
-# ('( case ( 1 == 2 ) bun -true- works )','works'),
-# ('( case ( 1 == 1 ) ( 1 == 1 ) )','-true-'),
-# ('( case ( 1 == 1 ) ( case  ( 1 == 1 ) in )','in'),
-# ('( case ( 1 == 1 ) ( case  ( 1 == 2 ) bun -true- in )','in'),
+(' ( case ( 1 == 1 ) in ) ','in'),
+(' ( case ( 1 == 2 ) bun -true- works ) ','works'),
+(' ( case ( 1 == 1 ) ( 1 == 1 ) ) ','-true-'),
+(' ( case ( 1 == 1 ) ( case  ( 1 == 1 ) in ) ','in'),
+(' ( case ( 1 == 1 ) ( case  ( 1 == 2 ) bun -true- in ) ','in'),
 (' ( ( a = 1 ) a ) ',1),
 (' ( ( a = 1 ) ( b = 1 ) a == b ) ) ','-true-'),
 (' ( ( best lang = aspy ) best lang ) ','aspy'),
@@ -170,14 +185,10 @@ def test_lang():
 
 prog = '''
 
-fib 0 = 1
-fib 1 = 1
-fib :n = ( fib ( n - 2 ) ) + ( fib ( n - 1 ) )
+l = 1 :: []
 
-0 factorial = 1
-:n factorial = n - 1 factorial * n 
+head l ( head l )
 
-fib 7
 
 '''
 

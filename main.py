@@ -20,7 +20,14 @@ match x [] not working - done
 
 prog = '''
 
- ( head ( tail ( 1 :: ( 2 :: -nil- ) ) ) * ( 1 * 2 * ( 3 * 4 ) * 5 * ( head ( 1 :: ( 2 :: ( 3 :: -nil- ) ) ) ) ) )
+fib 0 = 1
+fib 1 = 1
+fib :n = ( fib ( n - 2 ) ) + ( fib ( n - 1 ) )
+
+0 factorial = 1
+:n factorial = n - 1 factorial * n 
+
+fib 24
 
 
 '''
