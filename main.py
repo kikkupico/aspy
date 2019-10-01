@@ -20,25 +20,7 @@ match x [] not working - done
 
 prog = '''
 
-refer lib
-
-fib 0 = 1
-fib 1 = 1
-fib :n = ( fib ( n - 1 ) ) + ( fib ( n - 2 ) )
-
-
-~fastfib :n-2 :n-1 :p :q =
-  case
-    p == q
-    n-2 + n-1
-    -true-
-    ~fastfib n-1 ( n-2 + n-1 ) ( p + 1 ) q
-
-fastfib 0 = 1
-fastfib 1 = 1
-fastfib :n = ~fastfib 1 1 1 ( n - 1 )
-
-fastfib 100
+ ( head ( tail ( 1 :: ( 2 :: -nil- ) ) ) * ( 1 * 2 * ( 3 * 4 ) * 5 * ( head ( 1 :: ( 2 :: ( 3 :: -nil- ) ) ) ) ) )
 
 
 '''
