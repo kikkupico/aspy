@@ -87,10 +87,12 @@ def evaluate(e, tree=global_pattern_tree,values=global_values):
                 func = True
             side.append(word)
         if len(left)==1:
+            print('d 90', right, values, tree)
+            print('d 91', evaluate(tuple(right), tree, values))
             if len(right)==1:
-                values[left[0]]=right[0]
+                values[left[0]]=evaluate(right[0], tree, values)
             else:
-                values[left[0]]=tuple(right)
+                values[left[0]]=evaluate(tuple(right),tree, values)
         else:
             if func:
                 # print('evaluate, func', left)
@@ -191,69 +193,21 @@ def test_lang():
 
 prog = '''
 
-:p to :q = case
-  p == q
-  p  ( :: [] )
-  -true-
-  p ( :: ( ( p + 1 ) to q ) )
+refer lib
 
-:p ++ :q =
+
+fib 0 = 1
+fib 1 = 1
+fib :n = ( fib ( n - 1 ) ) + ( fib ( n - 2 ) )
+
+fastfib :n-2 :n-1 :p :q =
   case
-    p == []
-    q ( :: [] )
-    tail p == []
-    head p ( :: ( q ( :: [] ) ) )
+    p == q
+    n-2 + n-1
     -true-
-    head p ( :: ( tail p ++ q ) )
+    fastfib n-1 ( n-2 + n-1 ) ( p + 1 ) q
 
-:p , :q =
-  case
-    word p ?
-    p ( :: ( q ( :: [] ) ) )
-    -true-
-    p ++ q
-
-length of :l =
-  case
-    word l ?
-    0
-    l == []
-    0
-    -true-
-    1 + ( length of ( tail l ) )
-
-
-[ :x = partial-list ( x ( :: [] ) )
-partial-list :l ] = l
-partial-list :l :x = partial-list ( l ++ x )
-
-
-fill :pattern with :values =
-  case 
-    pattern == []
-    ()
-    -true-
-    case 
-      head pattern ( == _ )
-      case        
-        tail values == []
-        head values ( fill ( tail pattern ) with values )
-        -true-
-        head values ( fill ( tail pattern ) with ( tail values ) )
-      -true- 
-      head pattern ( fill ( tail pattern ) with values )
-
-:l map :pattern =
-  case
-    l == []
-    []
-    pattern == []
-    l
-    -true-
-    ( fill pattern with ( ( head l ) ( :: [] ) ) ) ( :: ( ( tail l ) map pattern ) )
-
-
-1 to 10 map ( [ _ + 7 ] )
+1 to 17 map ( [ fib _ ] )
 
 '''
 
