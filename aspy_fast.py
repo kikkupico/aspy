@@ -187,12 +187,74 @@ def test_lang():
     print(res, test[1])
     assert test[1] == res
 
-test_lang()
+# test_lang()
 
 prog = '''
 
-1 + 1 1
+:p to :q = case
+  p == q
+  p  ( :: [] )
+  -true-
+  p ( :: ( ( p + 1 ) to q ) )
+
+:p ++ :q =
+  case
+    p == []
+    q ( :: [] )
+    tail p == []
+    head p ( :: ( q ( :: [] ) ) )
+    -true-
+    head p ( :: ( tail p ++ q ) )
+
+:p , :q =
+  case
+    word p ?
+    p ( :: ( q ( :: [] ) ) )
+    -true-
+    p ++ q
+
+length of :l =
+  case
+    word l ?
+    0
+    l == []
+    0
+    -true-
+    1 + ( length of ( tail l ) )
+
+
+[ :x = partial-list ( x ( :: [] ) )
+partial-list :l ] = l
+partial-list :l :x = partial-list ( l ++ x )
+
+
+fill :pattern with :values =
+  case 
+    pattern == []
+    ()
+    -true-
+    case 
+      head pattern ( == _ )
+      case        
+        tail values == []
+        head values ( fill ( tail pattern ) with values )
+        -true-
+        head values ( fill ( tail pattern ) with ( tail values ) )
+      -true- 
+      head pattern ( fill ( tail pattern ) with values )
+
+:l map :pattern =
+  case
+    l == []
+    []
+    pattern == []
+    l
+    -true-
+    ( fill pattern with ( ( head l ) ( :: [] ) ) ) ( :: ( ( tail l ) map pattern ) )
+
+
+1 to 10 map ( [ _ + 7 ] )
 
 '''
 
-# print(evaluate(ast(preprocess(prog))))
+print(evaluate(ast(preprocess(prog))))
