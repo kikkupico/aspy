@@ -104,10 +104,11 @@ def evaluate(e, tree=global_pattern_tree,values=global_values):
     res = ()
     current = ()
     acc = ()    
+    prev_match = False
     while remaining != ():        
         if not isinstance(remaining[0],list) and remaining[0] in values:
-            current = (*current, evaluate((values[remaining[0]],),global_pattern_tree, values))       
-        elif isinstance(remaining[0],tuple):            
+            current = (*current, values[remaining[0]])       
+        elif isinstance(remaining[0],tuple):
             sub = evaluate(remaining[0], global_pattern_tree, values)
             if isinstance(sub, tuple):
                 current = *current,*sub
@@ -120,20 +121,24 @@ def evaluate(e, tree=global_pattern_tree,values=global_values):
         
         matching = match(current,acc,tree, values)
         if matching[0] == PARTIAL:
-            res = (*res, *current)
-            # print('ev partial', res, current)
+            if prev_match:
+                res = current
+            else:
+                res = (*res, *current)
             current = ()
             tree = matching[1]
             acc = matching[2]
+            prev_match= False
         else:            
             if isinstance(matching[1], tuple):
                 current = matching[1]
             else:
                 current = (matching[1],)
-
+            prev_match= True
             res = current
             tree = global_pattern_tree
             acc = ()
+
     if isinstance(res, tuple) and len(res)==1:
         return res[0]
     else:
@@ -172,6 +177,7 @@ tests = [
 (' ( 3 + 4 + 10 - 10 * 3 / 7 + 4 ) ', 7),
 (' 3 + 4 * 3  / ( 1 + 2 ) ', 7),
 (' 3 + 4 * 3  / ( 1 + 2 ) ', 7),
+# (' ( 1 + 1 1 )', (2, 1))
 ]
 
 def test_lang():
@@ -181,15 +187,12 @@ def test_lang():
     print(res, test[1])
     assert test[1] == res
 
-# test_lang()
+test_lang()
 
 prog = '''
 
-l = 1 :: []
-
-head l ( head l )
-
+1 + 1 1
 
 '''
 
-print(evaluate(ast(preprocess(prog))))
+# print(evaluate(ast(preprocess(prog))))
