@@ -61,7 +61,7 @@ def preprocess(s, pretty=False):
     res = '(\n'
     lines = s.strip().split('\n')
     for i in range(len(lines)):
-      if len(lines[i]) == 0:
+      if len(lines[i]) == 0 or lines[i].lstrip()[0]=='#':
         continue
       prev_indent = 0 if i==0 else len(lines[i-1])-len(lines[i-1].lstrip())
       current_indent = len(lines[i])-len(lines[i].lstrip())

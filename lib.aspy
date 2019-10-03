@@ -93,20 +93,20 @@ fill :pattern with :values =
       tail list filter pattern
 
 
-:list foldl :init :pattern =
+:list fold left :init :pattern =
   case
     list == []
     init
     -true-    
-    tail list foldl ( fill pattern with ( [ init ( head list ) ] ) ) pattern
+    tail list fold left ( fill pattern with ( [ init ( head list ) ] ) ) pattern
 
 
-:list foldr :pattern :init =
+:list fold right :pattern :init =
   case
     list == []
     init
     -true-    
-    tail list foldr ( fill pattern with ( [ ( head list ) init ] ) ) pattern
+    tail list fold right ( fill pattern with ( [ ( head list ) init ] ) ) pattern
 
 quicksort [] = []
 quicksort :list =
@@ -117,4 +117,4 @@ quicksort :list =
   lesser + ( [ pivot ] ) + greater
 
 :x ^ 0 = 1
-:x ^ :n = ( 0 to ( n - 1 ) ) foldl 1 ( [ _ * x ] )
+:x ^ :n = ( 0 to ( n - 1 ) ) fold left 1 ( [ _ * x ] )

@@ -20,9 +20,12 @@ match x [] not working - done
 
 prog = '''
 
-refer lib
+refer chess
 
-( 1 to 12 ) filter ( [ _ > 11 ] )
+board row :n = n
+
+board row 1
+
 
 '''
 

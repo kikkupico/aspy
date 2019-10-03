@@ -199,7 +199,9 @@ prog = '''
 
 refer lib
 
-item 0 of ( 1 to 10 )
+# this is a comment
+1 to 20 filter ( [ _ > 7 ] )
+
 
 '''
 
