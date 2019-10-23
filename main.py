@@ -20,12 +20,9 @@ match x [] not working - done
 
 prog = '''
 
-refer chess
+refer lib
 
-board row :n = n
-
-board row 1
-
+quicksort ( [ v a c d i w ] )
 
 '''
 

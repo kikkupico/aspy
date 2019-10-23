@@ -10,6 +10,8 @@ not -false- = -true-
 item 0 of :l = head l
 item :n of :l = item ( n - 1 ) of ( tail l )  
 
+empty :l ? = l == []
+
 :n times :x =
   case
     n == 0
@@ -118,3 +120,5 @@ quicksort :list =
 
 :x ^ 0 = 1
 :x ^ :n = ( 0 to ( n - 1 ) ) fold left 1 ( [ _ * x ] )
+
+:a : :b = [ a b ]

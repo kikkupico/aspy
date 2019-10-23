@@ -62,7 +62,7 @@ def match(l, acc, tree, values):
         return PARTIAL, tree, acc
 
 def params_from(vals, expr):
-    param_names = [ x[1:] for x in expr if isinstance(x, str) and ':' in x ]    
+    param_names = [ x[1:] for x in expr if isinstance(x, str) and ':' in x and len(x)>1 ]    
     return { param_names[i]:vals[i] for i in range(len(param_names))}
 
 def evaluate(e, tree=global_pattern_tree,values=global_values):
@@ -89,7 +89,7 @@ def evaluate(e, tree=global_pattern_tree,values=global_values):
             if word == '=':                
                 side = right
                 continue
-            if side==left and isinstance(word, str) and ':' in word:
+            if side==left and isinstance(word, str) and ':' in word and len(word)>1:
                 func = True
             side.append('-nil-' if word == '[]' else word )
         if len(left)==1:            
@@ -100,7 +100,7 @@ def evaluate(e, tree=global_pattern_tree,values=global_values):
         else:
             if func:
                 # print('evaluate, func', left)
-                pattern = [ '_' if isinstance(x, str) and ':' in x else x for x in left]                                
+                pattern = [ '_' if isinstance(x, str) and ':' in x and len(x)>1 else x for x in left]                                
                 add_pattern(tuple(pattern), tree, lambda e: evaluate(tuple(right),global_pattern_tree, {**values,**params_from(e,left)}))
                 return ()
             add_pattern(tuple(left),tree,lambda e:tuple(right))
@@ -199,9 +199,25 @@ prog = '''
 
 refer lib
 
-# this is a comment
-1 to 20 filter ( [ _ > 7 ] )
+:o . :k =
+  case
+    o == []
+    ()
+    head ( head o ) == k
+    head ( tail ( head o ) )
+    -true-
+    tail o . k
 
+details = 
+  [
+    name : pop
+    age : 33
+    spouse :
+      person :
+        name : ram
+  ]
+
+details
 
 '''
 
