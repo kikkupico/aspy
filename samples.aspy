@@ -47,3 +47,22 @@ tail ( [ ( ' a b c ) ] )
 car :l = head ( tail l  )
 cdr :l = tail ( tail l )
 
+
+
+
+refer lib
+
+otherwise = -true-
+
+ways for making 0 with :coins = 1
+ways for making :sum with [] = 0
+
+ways for making :sum with :coins =
+  case
+    sum < 0
+    0
+    otherwise
+    ways for making ( sum - ( head coins ) ) with coins + ( ways for making sum with ( tail coins ) )
+
+
+ways for making 15 with ( 1 to 5 )

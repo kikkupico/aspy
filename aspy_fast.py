@@ -19,7 +19,7 @@ def add_pattern_with_sig(s, p, tree, end):
 def add_pattern(p, tree, end): add_pattern_with_sig(p, p, tree, end)
 
 
-def do_add(e):
+def do_add(e):    
     e = [ [] if x == '-nil-' else x for x in e ]
     return e[0]+e[1]
 
@@ -28,6 +28,7 @@ add_pattern(('_','+','_'), global_pattern_tree, lambda e:do_add(e))
 add_pattern(('_','-','_'), global_pattern_tree, lambda e:e[0]-e[1])
 add_pattern(('_','*','_'), global_pattern_tree, lambda e:e[0]*e[1])
 add_pattern(('_','<=','_'), global_pattern_tree, lambda e:'-true-' if e[0]<=e[1]else '-false-')
+add_pattern(('_','<','_'), global_pattern_tree, lambda e:'-true-' if e[0]<e[1]else '-false-')
 add_pattern(('_','>','_'), global_pattern_tree, lambda e:'-true-' if e[0]>e[1] else '-false-')
 add_pattern(('_','/','_'), global_pattern_tree, lambda e:e[0]//e[1])
 add_pattern(('_','::','-nil-'), global_pattern_tree, lambda a:[a[0]])
@@ -80,6 +81,8 @@ def evaluate(e, tree=global_pattern_tree,values=global_values):
         else:
           i += 2
       return ()
+    if e_len>0 and e[0]=='literal':
+        return e[1:]
     if '=' in e and e_len>2:
         left = []
         right = []
@@ -197,27 +200,13 @@ def test_lang():
 
 prog = '''
 
+
 refer lib
 
-:o . :k =
-  case
-    o == []
-    ()
-    head ( head o ) == k
-    head ( tail ( head o ) )
-    -true-
-    tail o . k
+pip = pop
 
-details = 
-  [
-    name : pop
-    age : 33
-    spouse :
-      person :
-        name : ram
-  ]
+i ( literal pip )
 
-details
 
 '''
 

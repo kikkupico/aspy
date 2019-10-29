@@ -7,6 +7,15 @@ a :b :c :d = b + c + d
 
 filter very slow
 
+variables are not substituted in function definitions
+
+DESIGN ISSUE :
+
+:x to :y is defined;
+"ways to make change" is matched with :x to :y
+( make typed pattern matching? )
+
+
 :: ANALYZING... ::
 
 

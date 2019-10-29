@@ -22,7 +22,12 @@ prog = '''
 
 refer lib
 
-quicksort ( [ v a c d i w ] )
+
+p = [ _ + 5 + 6 ]
+l = [ 1 ]
+fill p with l
+p
+
 
 '''
 
