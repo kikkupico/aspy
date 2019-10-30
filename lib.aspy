@@ -53,9 +53,13 @@ length of :l =
     1 + ( length of ( tail l ) )
 
 
-[ :x = partial-list ( x ( :: [] ) )
-partial-list :l ] = l
-partial-list :l :x = partial-list ( l ++ x )
+[ :x = partial-list 0 ( ( x :: [] ) :: [] )
+partial-list 0  :l ]  = head l
+partial-list 0 :l [  = partial-list 1 ( [] :: l )
+partial-list :n :l [  = partial-list ( n + 1 ) ( [] :: l )
+partial-list :n :l ]  = partial-list ( n - 1 ) ( ( item 1 of l ++ ( head l ) ) :: ( tail ( tail l ) ) )
+partial-list 0 :l :x  = partial-list 0 ( ( ( head l ) ++ x ) :: [] )
+partial-list :n :l :x = partial-list n ( ( ( head l ) ++ x ) :: ( tail l ) )
 
 
 fill :pattern with :values =
