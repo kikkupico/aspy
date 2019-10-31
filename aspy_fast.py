@@ -29,10 +29,10 @@ add_pattern(('_','==','_'), global_pattern_tree, lambda e:'-true-' if e[0]==e[1]
 add_pattern(('_','+','_'), global_pattern_tree, lambda e:do_add(e))
 add_pattern(('_','-','_'), global_pattern_tree, lambda e:e[0]-e[1])
 add_pattern(('_','*','_'), global_pattern_tree, lambda e:e[0]*e[1])
+add_pattern(('_','/','_'), global_pattern_tree, lambda e:e[0]//e[1])
 add_pattern(('_','<=','_'), global_pattern_tree, lambda e:'-true-' if e[0]<=e[1]else '-false-')
 add_pattern(('_','<','_'), global_pattern_tree, lambda e:'-true-' if e[0]<e[1]else '-false-')
 add_pattern(('_','>','_'), global_pattern_tree, lambda e:'-true-' if e[0]>e[1] else '-false-')
-add_pattern(('_','/','_'), global_pattern_tree, lambda e:e[0]//e[1])
 add_pattern(('_','::','-nil-'), global_pattern_tree, lambda a:[a[0]])
 add_pattern(('_','::','_'), global_pattern_tree, lambda e:[e[0]]+e[1])
 add_pattern(('head','_'), global_pattern_tree, lambda e: () if e[0]=='-nil-' else e[0][0])
@@ -215,9 +215,10 @@ unroll :l =
     -true-
     unroll ( head l ) ( unroll ( tail l ) )
 
+l = 1 to 10
+p = [ tail [ 1 to 10 ] ]
 
-[ [ 1 2 ] 3 4 5 [ 6 7 ] ]
-
+unroll p
 
 '''
 

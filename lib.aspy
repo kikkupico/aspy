@@ -53,7 +53,7 @@ length of :l =
     1 + ( length of ( tail l ) )
 
 [ [ = partial-list 1 ( [] :: ( [] :: [] ) )
-[ :x = partial-list 0 ( ( x :: [] ) :: [] )
+[ :x = partial-list 0 ( ( x ( :: [] ) ) :: [] )
 partial-list 0  :l ]  = head l
 partial-list 0 :l [   = partial-list 1 ( [] :: l )
 partial-list :n :l [  = partial-list ( n + 1 ) ( [] :: l )
