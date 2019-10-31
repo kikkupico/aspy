@@ -20,9 +20,11 @@ def add_pattern(p, tree, end): add_pattern_with_sig(p, p, tree, end)
 
 
 def do_add(e):    
+    # print(e)
     e = [ [] if x == '-nil-' else x for x in e ]
     return e[0]+e[1]
 
+add_pattern(('word','_','?'), global_pattern_tree, lambda e:'-false-' if type(e[0])==list else '-true-')
 add_pattern(('_','==','_'), global_pattern_tree, lambda e:'-true-' if e[0]==e[1] else '-false-')
 add_pattern(('_','+','_'), global_pattern_tree, lambda e:do_add(e))
 add_pattern(('_','-','_'), global_pattern_tree, lambda e:e[0]-e[1])
@@ -35,6 +37,7 @@ add_pattern(('_','::','-nil-'), global_pattern_tree, lambda a:[a[0]])
 add_pattern(('_','::','_'), global_pattern_tree, lambda e:[e[0]]+e[1])
 add_pattern(('head','_'), global_pattern_tree, lambda e: () if e[0]=='-nil-' else e[0][0])
 add_pattern(('tail','_'), global_pattern_tree, lambda e:'-nil-' if e[0][1:]==[] else e[0][1:])
+
 
 
 FULL, PARTIAL = 'f','p'
@@ -203,15 +206,22 @@ prog = '''
 
 refer lib
 
-[ 1 2 3 
-  [ 4 5 
-    [ 6 
-      [ 7 ] 
-      ] 
-    ] 
-  ]
+p = [ 7 * [ 1 + 10 ] ]
 
-[ 1 2 [ 3 3 3 [ 4 [ 5 [ 6 [ 7 7 7 ] ] ] ] ] ]
+r = [ unroll [ 5 + 2 ] ]
+
+unroll :l =
+  case
+    l == []
+    ()
+    word l ?
+    ERROR
+    word ( head l ) ?
+    head l ( unroll ( tail l ) )
+    -true-
+    unroll ( head l ) ( unroll ( tail l ) )
+
+unroll p
 
 '''
 
