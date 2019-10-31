@@ -109,7 +109,7 @@ def evaluate(e, tree=global_pattern_tree,values=global_values):
                 pattern = [ '_' if isinstance(x, str) and ':' in x and len(x)>1 else x for x in left]                                
                 add_pattern(tuple(pattern), tree, lambda e: evaluate(tuple(right),global_pattern_tree, {**values,**params_from(e,left)}))
                 return ()
-            add_pattern(tuple(left),tree,lambda e:tuple(right))
+            add_pattern(tuple(left),tree,lambda e:evaluate(tuple(right),tree,values))
         return ()
 
     remaining = e
@@ -206,22 +206,18 @@ prog = '''
 
 refer lib
 
-p = [ 7 * [ 1 + 10 ] ]
-
-r = [ unroll [ 5 + 2 ] ]
-
 unroll :l =
   case
     l == []
     ()
-    word l ?
-    ERROR
     word ( head l ) ?
     head l ( unroll ( tail l ) )
     -true-
     unroll ( head l ) ( unroll ( tail l ) )
 
-unroll p
+
+[ [ 1 2 ] 3 4 5 [ 6 7 ] ]
+
 
 '''
 

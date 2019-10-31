@@ -22,12 +22,7 @@ prog = '''
 
 refer lib
 
-
-p = [ _ + 5 + 6 ]
-l = [ 1 ]
-fill p with l
-p
-
+[ 1 2 3 ]
 
 '''
 
