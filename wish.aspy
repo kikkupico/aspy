@@ -1,0 +1,5 @@
+1 to 10
+  take 5
+  filter [ _ > 5 ]
+  map [ 10 + _ ]
+  reduce 0 [ _ + _ ]

@@ -66,3 +66,54 @@ ways for making :sum with :coins =
 
 
 ways for making 15 with ( 1 to 5 )
+
+
+refer lib
+
+unroll :l =
+  case
+    l == []
+    ()
+    word ( head l ) ?
+    head l ( unroll ( tail l ) )
+    -true-
+    unroll ( head l ) ( unroll ( tail l ) )
+
+x = 7
+n = 1 2 3
+exp = x ( n ) 2 5
+
+fold :start :op :l =
+  case
+    l == []
+    start
+    -true-
+    head l op ( fold start op ( tail l ) )
+
+keep-in :cmp :l =
+  case
+    l == []
+    []
+    head l ( cmp ) == -true-
+    head l ( :: ( keep-in cmp ( tail l ) ) )
+    -true-
+    keep-in cmp ( tail l )
+
+:l map-r :f =
+  case
+    l == []
+    []
+    -true-
+    ( f ) ( head l ) ( :: ( ( tail l ) map-r f ) )
+
+<5 = < 5
+
+keep-in <5 ( 1 to 10 )
+
+l = ( 1 to 10 )
+
+fold 0 + l
+
+10+ = 10 +
+
+[ [ 1 2 ] [ 3 4 ] ] map-r head

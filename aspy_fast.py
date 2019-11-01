@@ -203,23 +203,23 @@ def test_lang():
 
 prog = '''
 
-
 refer lib
 
-unroll :l =
-  case
-    l == []
-    ()
-    word ( head l ) ?
-    head l ( unroll ( tail l ) )
-    -true-
-    unroll ( head l ) ( unroll ( tail l ) )
+:q map* [ [ = q partial-map 1 ( [] :: ( [] :: [] ) )
+:q map* [ :x = q partial-map 0 ( ( x ( :: [] ) ) :: [] )
+:q partial-map 0 :l ]  = q map ( head l )
+:q partial-map 0 :l [   = q partial-map 1 ( [] :: l )
+:q partial-map :n :l [  = q partial-map ( n + 1 ) ( [] :: l )
+:q partial-map :n :l ]  = q partial-map ( n - 1 ) ( ( item 1 of l ++ ( head l ) ) ( :: ( tail ( tail l ) ) ) )
+:q partial-map 0 :l :x  = q partial-map 0 ( ( ( head l ) ++ x ) ( :: [] ) )
+:q partial-map :n :l :x = q partial-map n ( ( ( head l ) ++ x ) ( :: ( tail l ) ) )
 
-l = 1 to 10
-p = [ tail [ 1 to 10 ] ]
-
-unroll p
+1 to 10 map* [ 7 + _ ]
+1 to 10 map ( [ _ + 10 ] )
 
 '''
 
 print(evaluate(ast(preprocess(prog))))
+
+# test_lang()
+# 

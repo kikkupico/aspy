@@ -57,9 +57,9 @@ length of :l =
 partial-list 0  :l ]  = head l
 partial-list 0 :l [   = partial-list 1 ( [] :: l )
 partial-list :n :l [  = partial-list ( n + 1 ) ( [] :: l )
-partial-list :n :l ]  = partial-list ( n - 1 ) ( ( item 1 of l ++ ( head l ) ) :: ( tail ( tail l ) ) )
-partial-list 0 :l :x  = partial-list 0 ( ( ( head l ) ++ x ) :: [] )
-partial-list :n :l :x = partial-list n ( ( ( head l ) ++ x ) :: ( tail l ) )
+partial-list :n :l ]  = partial-list ( n - 1 ) ( ( item 1 of l ++ ( head l ) ) ( :: ( tail ( tail l ) ) ) )
+partial-list 0 :l :x  = partial-list 0 ( ( ( head l ) ++ x ) ( :: [] ) )
+partial-list :n :l :x = partial-list n ( ( ( head l ) ++ x ) ( :: ( tail l ) ) )
 
 
 fill :pattern with :values =
@@ -126,3 +126,13 @@ quicksort :list =
 :x ^ :n = ( 0 to ( n - 1 ) ) fold left 1 ( [ _ * x ] )
 
 :a : :b = [ a b ]
+
+
+:q map* [ [ = q partial-map 1 ( [] :: ( [] :: [] ) )
+:q map* [ :x = q partial-map 0 ( ( x ( :: [] ) ) :: [] )
+:q partial-map 0 :l ]  = q map ( head l )
+:q partial-map 0 :l [   = q partial-map 1 ( [] :: l )
+:q partial-map :n :l [  = q partial-map ( n + 1 ) ( [] :: l )
+:q partial-map :n :l ]  = q partial-map ( n - 1 ) ( ( item 1 of l ++ ( head l ) ) ( :: ( tail ( tail l ) ) ) )
+:q partial-map 0 :l :x  = q partial-map 0 ( ( ( head l ) ++ x ) ( :: [] ) )
+:q partial-map :n :l :x = q partial-map n ( ( ( head l ) ++ x ) ( :: ( tail l ) ) )
