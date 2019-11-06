@@ -77,9 +77,10 @@ def evaluate(e, tree=global_pattern_tree,values=global_values):
             return e
     e_len = len(e)
     if e_len>0 and e[0]=='case':
-      cases = e[1:]
-      for i in range(len(cases)):
-        if evaluate(cases[i] ,tree, values) == '-true-':
+      cases = e[1:]      
+      i = 0
+      while (i < len(cases)):        
+        if evaluate(cases[i] ,tree, values) == '-true-':          
           return evaluate(cases[i+1], tree, values)
         else:
           i += 2
@@ -205,21 +206,20 @@ prog = '''
 
 refer lib
 
-:q map* [ [ = q partial-map 1 ( [] :: ( [] :: [] ) )
-:q map* [ :x = q partial-map 0 ( ( x ( :: [] ) ) :: [] )
-:q partial-map 0 :l ]  = q map ( head l )
-:q partial-map 0 :l [   = q partial-map 1 ( [] :: l )
-:q partial-map :n :l [  = q partial-map ( n + 1 ) ( [] :: l )
-:q partial-map :n :l ]  = q partial-map ( n - 1 ) ( ( item 1 of l ++ ( head l ) ) ( :: ( tail ( tail l ) ) ) )
-:q partial-map 0 :l :x  = q partial-map 0 ( ( ( head l ) ++ x ) ( :: [] ) )
-:q partial-map :n :l :x = q partial-map n ( ( ( head l ) ++ x ) ( :: ( tail l ) ) )
+:x in :l =
+  case
+    l == []
+    -false-
+    head l == x
+    -true-
+    -true-
+    x in ( tail l )
 
-1 to 10 map* [ 7 + _ ]
-1 to 10 map ( [ _ + 10 ] )
+1 in ( 1 to 10 )
 
 '''
 
 print(evaluate(ast(preprocess(prog))))
 
 # test_lang()
-# 
+#

@@ -127,12 +127,14 @@ quicksort :list =
 
 :a : :b = [ a b ]
 
+:q func* :f [ [ = q partial-func* f 1 ( [] :: ( [] :: [] ) )
+:q func* :f [ :x = q partial-func* f 0 ( ( x ( :: [] ) ) :: [] )
+:q partial-func* :f 0 :l ]  = q f ( head l )
+:q partial-func* :f 0 :l [   = q partial-func* f 1 ( [] :: l )
+:q partial-func* :f :n :l [  = q partial-func* f ( n + 1 ) ( [] :: l )
+:q partial-func* :f :n :l ]  = q partial-func* f ( n - 1 ) ( ( item 1 of l ++ ( head l ) ) ( :: ( tail ( tail l ) ) ) )
+:q partial-func* :f 0 :l :x  = q partial-func* f 0 ( ( ( head l ) ++ x ) ( :: [] ) )
+:q partial-func* :f :n :l :x = q partial-func* f n ( ( ( head l ) ++ x ) ( :: ( tail l ) ) )
 
-:q map* [ [ = q partial-map 1 ( [] :: ( [] :: [] ) )
-:q map* [ :x = q partial-map 0 ( ( x ( :: [] ) ) :: [] )
-:q partial-map 0 :l ]  = q map ( head l )
-:q partial-map 0 :l [   = q partial-map 1 ( [] :: l )
-:q partial-map :n :l [  = q partial-map ( n + 1 ) ( [] :: l )
-:q partial-map :n :l ]  = q partial-map ( n - 1 ) ( ( item 1 of l ++ ( head l ) ) ( :: ( tail ( tail l ) ) ) )
-:q partial-map 0 :l :x  = q partial-map 0 ( ( ( head l ) ++ x ) ( :: [] ) )
-:q partial-map :n :l :x = q partial-map n ( ( ( head l ) ++ x ) ( :: ( tail l ) ) )
+:l map* = l func* map
+:l filter* = l func* filter
