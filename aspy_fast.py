@@ -1,6 +1,7 @@
 from preprocess import preprocess
 from aspy_ast import ast
 import copy
+import sys
 
 global_pattern_tree = {}
 global_values = {'[]':'-nil-','[ ]':'-nil-','()':(),'( )':()}
@@ -203,6 +204,11 @@ def test_lang():
 
 # test_lang()
 
-with open('prog.aspy') as f:
-    prog = f.read()
+prog_file = 'prog.aspy'
+
+if len(sys.argv)>1:
+    prog_file = sys.argv[1]
+
+with open(prog_file) as f:
+    prog = f.read()    
     print(evaluate(ast(preprocess(prog))))

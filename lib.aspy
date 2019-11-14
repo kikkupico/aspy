@@ -180,3 +180,42 @@ quicksort :list =
     a :: ( b :: [] )
     -true-
     a :: b
+
+
+unroll :l =
+  case
+    l == []
+    ()
+    word ( head l ) ?
+    head l ( unroll ( tail l ) )
+    -true-
+    unroll ( head l ) ( unroll ( tail l ) )
+
+unroll-bound :x :l =
+  case
+    l == []
+    ()
+    word ( head l ) ?
+    case
+      head l == list
+      head ( tail l ) ( unroll-bound x ( tail ( tail l ) ) )
+      head l == it
+      x ( unroll-bound x ( tail l ) )
+      -true-
+      head l ( unroll-bound x ( tail l ) )
+    -true-
+    unroll-bound x ( head l ) ( unroll-bound x ( tail l ) )
+
+:p each of :l =
+  case
+    l == []
+    []
+    p == []
+    l
+    -true-
+    unroll-bound ( head l ) p :: ( p each of ( tail l ) )
+
+
+:x not= :y = not ( x == y )
+:l without :x = l filter* [ _ not= x ]
+:x followed-by-each :l = [ x followed by it ] each of l

@@ -1,5 +1,5 @@
 permute [] = [ [] ]
-permute :l = l map [ _ :: [ permute [ l without _ ] ] ]
+permute :l = [ it followed-by-each [ permute [ list l without it ] ] ] each of l
 
 
 DISCUSSION
