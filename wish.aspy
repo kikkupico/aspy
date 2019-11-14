@@ -1,5 +1,29 @@
+super map (partially done)
 1 to 10
   take 5
   filter [ _ > 5 ]
   map [ 10 + _ ]
   reduce 0 [ _ + _ ]
+
+
+
+multi level map ;  [ ] based array within map
+
+it = _
+
+n = [ 1 2 3 ]
+l = [ a b c ]
+
+:a tuple :b = a :: ( b :: [] )
+
+abc :c = l map* [ c tuple it ]
+
+n map [ l map [ [ it_n it_l ] ] ]
+
+
+
+
+alt map ?
+
+1 to 10 map { it + 10 }
+n map { l map { [ it_n it_l ] } }

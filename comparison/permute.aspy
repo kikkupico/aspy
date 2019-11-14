@@ -1,0 +1,21 @@
+permute [] = [ [] ]
+permute :l = l map [ _ :: [ permute [ l without _ ] ] ]
+
+
+DISCUSSION
+
+why does the prog below return nested array ?
+
+refer lib
+
+it = _
+
+n = [ 1 2 3 ]
+l = [ a b c ]
+
+:a tuple :b = a :: ( b :: [] )
+
+abc :c = l map* [ c tuple it ]
+
+n map* [ abc it ]
+

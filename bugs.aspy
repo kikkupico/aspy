@@ -1,3 +1,5 @@
+map map* not working with prefix style functions (eg: add _ _ )
+
 assignment not working in case within functions
 
 will this work?

@@ -30,6 +30,7 @@ add_pattern(('_','+','_'), global_pattern_tree, lambda e:do_add(e))
 add_pattern(('_','-','_'), global_pattern_tree, lambda e:e[0]-e[1])
 add_pattern(('_','*','_'), global_pattern_tree, lambda e:e[0]*e[1])
 add_pattern(('_','/','_'), global_pattern_tree, lambda e:e[0]//e[1])
+add_pattern(('_','%','_'), global_pattern_tree, lambda e:e[0]%e[1])
 add_pattern(('_','<=','_'), global_pattern_tree, lambda e:'-true-' if e[0]<=e[1]else '-false-')
 add_pattern(('_','<','_'), global_pattern_tree, lambda e:'-true-' if e[0]<e[1]else '-false-')
 add_pattern(('_','>','_'), global_pattern_tree, lambda e:'-true-' if e[0]>e[1] else '-false-')
@@ -202,24 +203,6 @@ def test_lang():
 
 # test_lang()
 
-prog = '''
-
-refer lib
-
-:x in :l =
-  case
-    l == []
-    -false-
-    head l == x
-    -true-
-    -true-
-    x in ( tail l )
-
-1 in ( 1 to 10 )
-
-'''
-
-print(evaluate(ast(preprocess(prog))))
-
-# test_lang()
-#
+with open('prog.aspy') as f:
+    prog = f.read()
+    print(evaluate(ast(preprocess(prog))))

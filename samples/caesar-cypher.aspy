@@ -1,0 +1,10 @@
+refer lib
+
+alphabets = [ a b c d e f g h i j k l m n o p q r s t u v w x y z ]
+
+:key caeser :letter =
+  item ( ( key + ( index of letter in alphabets ) ) % 26  ) of alphabets
+
+caeser-encode :string with key :k = string map* [ k caeser _ ]
+
+caeser-encode alphabets with key 7

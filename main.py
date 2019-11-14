@@ -22,9 +22,17 @@ prog = '''
 
 refer lib
 
-:n ++ = n + 1
+:l headcons :r = ( head l ) :: r
 
-6 ++
+permute [] = []
+permute :l =
+  case
+    tail l == []
+    [ ( head l ) ]
+    -true-
+    permute ( tail l ) map ( [ _ headcons ( 1 to 3 ) ] )
+
+permute ( 1 to 3 )
 
 '''
 
@@ -94,7 +102,9 @@ def evaluate(e, context=global_context):
   if isinstance(e, tuple) and len(e)>0:
     if e[0]=='case':
       cases = e[1:]
-      for i in range(len(cases)):
+      i = 0
+      while i < len(cases):
+        print('evaling case', cases[i])
         if evaluate(cases[i] ,context) == '-true-':
           return evaluate(cases[i+1], context)
         else:

@@ -1,0 +1,2 @@
+permute [] = [[]]
+permute :l = l map [ _ :: [ permute [ l without _ ] ] ]

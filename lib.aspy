@@ -52,6 +52,17 @@ length of :l =
     -true-
     1 + ( length of ( tail l ) )
 
+
+:x in :l =
+  case
+    l == []
+    -false-
+    head l == x
+    -true-
+    -true-
+    x in ( tail l )
+
+
 [ [ = partial-list 1 ( [] :: ( [] :: [] ) )
 [ :x = partial-list 0 ( ( x ( :: [] ) ) :: [] )
 partial-list 0  :l ]  = head l
@@ -114,6 +125,19 @@ fill :pattern with :values =
     -true-    
     tail list fold right ( fill pattern with ( [ ( head list ) init ] ) ) pattern
 
+
+index* of :x in :l :n =
+  case
+    l == []
+    -nil-
+    head l == x
+    n
+    -true-
+    index* of x in ( tail l ) ( n + 1 )
+
+index of :x in :l = index* of x in l 0
+
+
 quicksort [] = []
 quicksort :list =
   pivot = head list
@@ -136,5 +160,23 @@ quicksort :list =
 :q partial-func* :f 0 :l :x  = q partial-func* f 0 ( ( ( head l ) ++ x ) ( :: [] ) )
 :q partial-func* :f :n :l :x = q partial-func* f n ( ( ( head l ) ++ x ) ( :: ( tail l ) ) )
 
+:q *func* :f { { = q *partial-func* f 1 ( [] :: ( [] :: [] ) )
+:q *func* :f { :x = q *partial-func* f 0 ( ( x ( :: [] ) ) :: [] )
+:q *partial-func* :f 0 :l }  = q f ( head l )
+:q *partial-func* :f 0 :l {  = q *partial-func* f 1 ( [] :: l )
+:q *partial-func* :f :n :l {  = q *partial-func* f ( n + 1 ) ( [] :: l )
+:q *partial-func* :f :n :l }  = q *partial-func* f ( n - 1 ) ( ( item 1 of l ++ ( head l ) ) ( :: ( tail ( tail l ) ) ) )
+:q *partial-func* :f 0 :l :x  = q *partial-func* f 0 ( ( ( head l ) ++ x ) ( :: [] ) )
+:q *partial-func* :f :n :l :x = q *partial-func* f n ( ( ( head l ) ++ x ) ( :: ( tail l ) ) )
+
 :l map* = l func* map
 :l filter* = l func* filter
+
+:l *map* = l *func* map
+
+:a followed by :b =
+  case
+    word b ?
+    a :: ( b :: [] )
+    -true-
+    a :: b
