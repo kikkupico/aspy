@@ -1,11 +1,9 @@
 refer lib
 
-city-map =
-  [
-    [ chennai -> coimbatore madurai ]
-    [ coimbatore -> salem trichy ]
-    [ madurai -> tanjore dindigul ]
-  ]
+city-map = -data-
+  chennai -> coimbatore madurai
+  coimbatore -> salem trichy
+  madurai -> tanjore dindigul
 
 neighbours :place :graph =
   case
@@ -17,3 +15,12 @@ neighbours :place :graph =
     neighbours place ( tail graph )
 
 neighbours coimbatore city-map
+
+
+
+IDEAL
+
+[ tail [ tail it ] ] in graph where [ head it == node ]
+
+( tail ( tail it ) ) in graph where ( head it == node )
+

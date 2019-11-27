@@ -1,5 +1,31 @@
+refer lib
+
 permute [] = [ [] ]
-permute :l = [ it followed-by-each [ permute [ list l without it ] ] ] each of l
+permute :l =
+  other-perms-of :x = permute ( l without x )
+  [ it followed-by-each [ other-perms-of it ] ] each of l
+
+
+
+
+
+
+
+refer lib
+
+permute [] = [ [] ]
+permute :l =
+  other-perms-of :x = 2 times ( l without x )
+  case
+    length of l == 1
+    [ l ]
+    -true-
+    [ it followed-by-each [ other-perms-of it ] ] each of l 
+      fold left []
+        [ _ + _ ]
+
+permute ( 1 to 2 )
+
 
 
 DISCUSSION

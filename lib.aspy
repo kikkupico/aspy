@@ -101,13 +101,11 @@ fill :pattern with :values =
 :list filter :pattern =
   case
     list == []
-    []
+    []    
+    fill pattern with ( ( head list ) :: [] ) == -true-
+    ( head list ) :: ( tail list filter pattern )
     -true-
-    case
-      fill pattern with ( ( head list ) :: [] ) == -true-
-      ( head list ) :: ( tail list filter pattern )
-      -true-
-      tail list filter pattern
+    tail list filter pattern
 
 
 :list fold left :init :pattern =
@@ -176,6 +174,8 @@ quicksort :list =
 
 :a followed by :b =
   case
+    b == []
+    a :: []
     word b ?
     a :: ( b :: [] )
     -true-
@@ -219,3 +219,13 @@ unroll-bound :x :l =
 :x not= :y = not ( x == y )
 :l without :x = l filter* [ _ not= x ]
 :x followed-by-each :l = [ x followed by it ] each of l
+
+
+:p cartesian* :q =
+  case
+    p == []
+    []
+    q == []
+    []
+    -true-
+    head p followed by ( head q ) followed by ( ( tail p ) cartesian* ( tail q ) )

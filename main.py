@@ -20,19 +20,8 @@ match x [] not working - done
 
 prog = '''
 
-refer lib
-
-:l headcons :r = ( head l ) :: r
-
-permute [] = []
-permute :l =
-  case
-    tail l == []
-    [ ( head l ) ]
-    -true-
-    permute ( tail l ) map ( [ _ headcons ( 1 to 3 ) ] )
-
-permute ( 1 to 3 )
+x = 1
+( -expr- x + 2 )
 
 '''
 
@@ -98,7 +87,9 @@ def meaning(e, ev, context):
         return ev(pattern_expansion,{**context, **local_context})        
     return None
 
-def evaluate(e, context=global_context):  
+def evaluate(e, context=global_context): 
+  if isinstance(e, tuple) and len(e)>0 and ( e[0]=='-expr-' or e[0] == "'"):        
+        return e[1:], 
   if isinstance(e, tuple) and len(e)>0:
     if e[0]=='case':
       cases = e[1:]

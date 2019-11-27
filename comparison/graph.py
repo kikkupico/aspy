@@ -13,3 +13,10 @@ def neighbours(node, graph):
 
 
 print(neighbours('coimbatore' ,city_map_l))
+
+
+'''
+
+neighbours :node :graph = ( it without first 2 ) in graph where ( it 's first == node )
+
+'''

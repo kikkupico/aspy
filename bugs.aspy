@@ -1,3 +1,30 @@
+IMP: below prog doesn't work as expect; major matching logic revamp needed
+4 2 3 + 7
+
+IMP: unroll-bound not working for some fns
+
+
+refer lib
+
+fizzbuzzer :x =
+  case
+    x + 15 == 0
+    fizzbuzz
+    x + 5 == 0
+    buzz
+    x + 3 == 0
+    fizz
+    -true-
+    x
+
+even :n = 1 + n
+
+unroll-bound 5 ( [ even it ] )
+
+
+
+
+
 map map* not working with prefix style functions (eg: add _ _ )
 
 assignment not working in case within functions

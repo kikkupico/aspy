@@ -4,7 +4,7 @@ import copy
 import sys
 
 global_pattern_tree = {}
-global_values = {'[]':'-nil-','[ ]':'-nil-','()':(),'( )':()}
+global_values = {'[]':'-nil-','[ ]':'-nil-','()':(),'( )':(),'-newline-':'\n'}
 
 def add_pattern_with_sig(s, p, tree, end):
     if p == ():
@@ -19,6 +19,8 @@ def add_pattern_with_sig(s, p, tree, end):
 
 def add_pattern(p, tree, end): add_pattern_with_sig(p, p, tree, end)
 
+def listit(t):
+    return list(map(listit, t)) if isinstance(t, (list, tuple)) else t
 
 def do_add(e):    
     # print(e)
@@ -42,9 +44,9 @@ add_pattern(('tail','_'), global_pattern_tree, lambda e:'-nil-' if e[0][1:]==[] 
 
 
 
-FULL, PARTIAL = 'f','p'
+FULL, PARTIAL, NONE = 'f','p', 'n'
 
-def match(l, acc, tree, values):    
+def match(l, acc, tree, values): 
     subtree = {}
     added = False
     if l == ():
@@ -63,8 +65,10 @@ def match(l, acc, tree, values):
             else:
                 subtree = { **tree[word], **subtree}
     if subtree != {}:
+        # print('hit ', l, acc)
         return match(l[1:], acc, subtree, values)        
     else:
+        # print('hit part', l, acc)
         return PARTIAL, tree, acc
 
 def params_from(vals, expr):
@@ -72,6 +76,7 @@ def params_from(vals, expr):
     return { param_names[i]:vals[i] for i in range(len(param_names))}
 
 def evaluate(e, tree=global_pattern_tree,values=global_values):
+    # print('evaluating ' , e)
     if not isinstance(e, tuple) and not isinstance(e, list):
         if e in values:
             return values[e]
@@ -87,8 +92,10 @@ def evaluate(e, tree=global_pattern_tree,values=global_values):
         else:
           i += 2
       return ()
-    if e_len>0 and e[0]=='literal':
-        return e[1:]
+    if e_len>0 and ( e[0]=='-expr-' or e [0] == "'"):        
+        return e[1:],
+    if e_len>0 and ( e[0]=='-data-' or e [0] == '"'):
+        return listit(e[1:])
     if '=' in e and e_len>2:
         left = []
         right = []
@@ -212,3 +219,4 @@ if len(sys.argv)>1:
 with open(prog_file) as f:
     prog = f.read()    
     print(evaluate(ast(preprocess(prog))))
+

@@ -1,7 +1,3 @@
 refer lib
 
-permute [] = [ [] ]
-permute :l =
-  other-perms-of :x = permute ( l without x )
-  [ it followed-by-each [ other-perms-of it ] ] each of l
-
+[ 1 2 [ 4 5 ] ]

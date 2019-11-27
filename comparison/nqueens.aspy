@@ -1,0 +1,96 @@
+refer lib
+
+queens = -data-
+  1 1
+
+row :q = head q
+col :q = head ( tail q )
+
+
+abs :x =
+  case
+    x > 0
+    x
+    -true-
+    0 - x
+
+
+board = -data-
+    1 2 3 4 5 6 7 8
+  1   
+  2     
+  3
+  4
+  5
+  6
+  7
+  8
+
+
+diags = -data-
+  +1 +1
+  +1 -1
+  -1 +1
+  -1 -1
+
+
+:q under-attack by :qs ? =
+  current = head qs
+  case
+    qs == []
+    -true-
+    -true-
+    ( row q == ( row current ) ) or ( col q == ( col current ) ) or ( abs ( ( row q ) - ( row current ) ) ) == ( abs ( ( col q ) - ( col current ) ) )
+
+[ 0 2 ] under-attack by queens ?
+
+
+
+-- backtracking solution --
+
+in each row
+place q in pos
+if q is attacked go back and place previous q in next pos
+
+
+in each row of ( 0 to 7 )
+  in each column of ( 0 to 7 )
+    if q placed at column is safe from qs
+????
+
+
+
+
+def nqueens(n, i, qs):
+    if n == 0:
+        return qs  
+    if safe_queen(i,qs):        
+        return nqueens(n-1, 0, qs + [i])
+    else:
+        if i < 7:
+            return nqueens(n, i+1, qs)
+        else:
+            if qs[-1] < 7:
+                return nqueens(n+1, qs[-1]+1,qs[:-1])
+            else: return nqueens(n+2, qs[-2]+1,qs[:-2])
+
+
+place :n th queen in :board starting from :c =
+  case
+    n == 8
+      board
+    queen at c is safe in board ?
+      place ( n - 1 ) th queen in ( board ++ c ) starting from 0
+
+
+
+:n queens in :board starting from :c = case
+  n == 8
+    board
+  queen at c is safe in board
+    ( n - 1 ) queens in ( board ++ c ) starting from 0
+    i < 7
+      n queens in board starting from ( c + 1 )
+      last queen of board < 7
+        ( n + 1 ) queens in board-without-last starting from ( last-queen + 1 )
+        ( n + 2 ) queens in board-without-last-two starting from ( second-last-queen + 1 )

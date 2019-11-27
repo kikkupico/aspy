@@ -27,3 +27,44 @@ alt map ?
 
 1 to 10 map { it + 10 }
 n map { l map { [ it_n it_l ] } }
+
+
+
+easy case
+
+:p ++ :q = case
+  p == [] ?
+    q ( :: [] )
+  tail p == [] ?
+    head p ( :: ( q ( :: [] ) ) )
+  otherwise
+    head p ( :: ( tail p ++ q ) )
+
+:p ++ :q = case
+  p == [] ?
+  - q ( :: [] )
+  tail p == [] ?
+  - head p ( :: ( q ( :: [] ) ) )
+  otherwise
+  - head p ( :: ( tail p ++ q ) )
+
+:p ++ :q = 
+  if p == []
+    q ( :: [] )
+  else if p == []
+    head p ( :: ( q ( :: [] ) ) )
+  else
+  - head p ( :: ( tail p ++ q ) )
+
+case
+  name ?
+    pop
+      pep
+    kik
+      kek
+    aru
+      bisk ?
+        busk
+          bask
+        husk
+          pupp
