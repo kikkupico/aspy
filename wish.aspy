@@ -68,3 +68,32 @@ case
           bask
         husk
           pupp
+
+
+
+
+
+nested pattern matching
+???
+
+count-leaves :l =
+  case
+    l == []
+    0
+    word l ?
+    1
+    -true-
+    count-leaves ( head l ) +
+      count-leaves ( tail l )
+
+
+count-leaves :l = 
+  case
+    l == []
+      0
+    word l ?
+      1
+    -true-
+      count-leaves ( head l ) +
+        count-leaves ( tail l )
+

@@ -5,6 +5,22 @@ city-map = -data-
   coimbatore -> salem trichy
   madurai -> tanjore dindigul
 
+neighbours :place :graph = [ tail [ tail it ] ] in graph where [ [ head it ] == place ]
+
+neighbours chennai city-map
+
+
+--- old version ---
+
+
+
+refer lib
+
+city-map = -data-
+  chennai -> coimbatore madurai
+  coimbatore -> salem trichy
+  madurai -> tanjore dindigul
+
 neighbours :place :graph =
   case
     graph == []

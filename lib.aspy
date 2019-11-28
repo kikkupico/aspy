@@ -53,14 +53,14 @@ length of :l =
     1 + ( length of ( tail l ) )
 
 
-:x in :l =
+:x -in- :l =
   case
     l == []
     -false-
     head l == x
     -true-
     -true-
-    x in ( tail l )
+    x -in- ( tail l )
 
 
 [ [ = partial-list 1 ( [] :: ( [] :: [] ) )
@@ -79,7 +79,7 @@ fill :pattern with :values =
     ()
     -true-
     case 
-      head pattern ( == _ )
+      head pattern ( == it )
       case        
         tail values == []
         head values ( fill ( tail pattern ) with values )
@@ -187,7 +187,7 @@ unroll :l =
     l == []
     ()
     word ( head l ) ?
-    head l ( unroll ( tail l ) )
+    ( head l ) ( unroll ( tail l ) )
     -true-
     unroll ( head l ) ( unroll ( tail l ) )
 
@@ -205,6 +205,23 @@ unroll-bound :x :l =
       head l ( unroll-bound x ( tail l ) )
     -true-
     unroll-bound x ( head l ) ( unroll-bound x ( tail l ) )
+
+
+unroll-bound-p :v :x :l =
+  case
+    l == []
+    ()
+    word ( head l ) ?
+    case
+      head l == list
+      head ( tail l ) ( unroll-bound-p v x ( tail ( tail l ) ) )
+      head l == v
+      x ( unroll-bound-p v x ( tail l ) )
+      -true-
+      ( head l ) ( unroll-bound-p v x ( tail l ) )
+    -true-
+    unroll-bound-p v x ( head l ) ( unroll-bound-p v x ( tail l ) )
+
 
 :p each of :l =
   case
@@ -229,3 +246,23 @@ unroll-bound :x :l =
     []
     -true-
     head p followed by ( head q ) followed by ( ( tail p ) cartesian* ( tail q ) )
+
+
+:exp in :l -where :cond =
+  case
+    l == []
+    []
+    unroll-bound ( head l ) cond
+    unroll-bound ( head l ) exp
+    -true-
+    exp in ( tail l ) -where cond
+
+:exp in :q where [ [ = exp in q partial-where 1 ( [] :: ( [] :: [] ) )
+:exp in :q where [ :x = exp in q partial-where 0 ( ( x ( :: [] ) ) :: [] )
+:exp in :q partial-where 0 :l ]  = exp in q -where ( head l )
+:exp in :q partial-where 0 :l [   = exp in q partial-where 1 ( [] :: l )
+:exp in :q partial-where :n :l [  = exp in q partial-where ( n + 1 ) ( [] :: l )
+:exp in :q partial-where :n :l ]  = exp in q partial-where ( n - 1 ) ( ( item 1 of l ++ ( head l ) ) ( :: ( tail ( tail l ) ) ) )
+:exp in :q partial-where 0 :l :x  = exp in q partial-where 0 ( ( ( head l ) ++ x ) ( :: [] ) )
+:exp in :q partial-where :n :l :x = exp in q partial-where n ( ( ( head l ) ++ x ) ( :: ( tail l ) ) )
+

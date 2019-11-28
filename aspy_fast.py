@@ -92,10 +92,12 @@ def evaluate(e, tree=global_pattern_tree,values=global_values):
         else:
           i += 2
       return ()
-    if e_len>0 and ( e[0]=='-expr-' or e [0] == "'"):        
-        return e[1:],
-    if e_len>0 and ( e[0]=='-data-' or e [0] == '"'):
+    if e_len>0 and e[0]=='eval':
+        return evaluate(e[1][1:], tree, values)
+    if e_len>0 and ( e[0]=='-data-' or e [0] == "'"):
         return listit(e[1:])
+    if e_len>0 and ( e[0]=='-expr-'):
+        return (e,)
     if '=' in e and e_len>2:
         left = []
         right = []
@@ -110,9 +112,9 @@ def evaluate(e, tree=global_pattern_tree,values=global_values):
             side.append('-nil-' if word == '[]' else word )
         if len(left)==1:            
             if len(right)==1:
-                values[left[0]]=evaluate(right[0], tree, values)
+                values[evaluate(left[0], tree, values)]=evaluate(right[0], tree, values)
             else:
-                values[left[0]]=evaluate(tuple(right),tree, values)
+                values[evaluate(left[0], tree, values)]=evaluate(tuple(right),tree, values)
         else:
             if func:
                 # print('evaluate, func', left)
@@ -162,7 +164,10 @@ def evaluate(e, tree=global_pattern_tree,values=global_values):
             acc = ()
 
     if isinstance(res, tuple) and len(res)==1:
-        return res[0]
+        if not isinstance(res[0], list) and res[0] in values:
+            return values[res[0]]
+        else:
+            return res[0]     
     else:
         return res
 

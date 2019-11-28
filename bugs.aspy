@@ -1,3 +1,13 @@
+refer lib
+
+1 to 10
+  fold right []
+    [ it :: it ]
+returns wrongly, ([2, 3, 4, 5, 6, 7, 8, 9, 10], 'fold', 'right', '-nil-')
+
+
+
+
 IMP: below prog doesn't work as expect; major matching logic revamp needed
 4 2 3 + 7
 
