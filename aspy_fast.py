@@ -27,20 +27,20 @@ def do_add(e):
     e = [ [] if x == '-nil-' else x for x in e ]
     return e[0]+e[1]
 
-add_pattern(('word','_','?'), global_pattern_tree, lambda e:'-false-' if type(e[0])==list else '-true-')
-add_pattern(('_','==','_'), global_pattern_tree, lambda e:'-true-' if e[0]==e[1] else '-false-')
-add_pattern(('_','+','_'), global_pattern_tree, lambda e:do_add(e))
-add_pattern(('_','-','_'), global_pattern_tree, lambda e:e[0]-e[1])
-add_pattern(('_','*','_'), global_pattern_tree, lambda e:e[0]*e[1])
-add_pattern(('_','/','_'), global_pattern_tree, lambda e:e[0]//e[1])
-add_pattern(('_','%','_'), global_pattern_tree, lambda e:e[0]%e[1])
-add_pattern(('_','<=','_'), global_pattern_tree, lambda e:'-true-' if e[0]<=e[1]else '-false-')
-add_pattern(('_','<','_'), global_pattern_tree, lambda e:'-true-' if e[0]<e[1]else '-false-')
-add_pattern(('_','>','_'), global_pattern_tree, lambda e:'-true-' if e[0]>e[1] else '-false-')
-add_pattern(('_','::','-nil-'), global_pattern_tree, lambda a:[a[0]])
-add_pattern(('_','::','_'), global_pattern_tree, lambda e:[e[0]]+e[1])
-add_pattern(('head','_'), global_pattern_tree, lambda e: () if e[0]=='-nil-' else e[0][0])
-add_pattern(('tail','_'), global_pattern_tree, lambda e:'-nil-' if e[0][1:]==[] else e[0][1:])
+add_pattern(('word','_','?'), global_pattern_tree, lambda e,v:'-false-' if type(e[0])==list else '-true-')
+add_pattern(('_','==','_'), global_pattern_tree, lambda e,v:'-true-' if e[0]==e[1] else '-false-')
+add_pattern(('_','+','_'), global_pattern_tree, lambda e,v:do_add(e))
+add_pattern(('_','-','_'), global_pattern_tree, lambda e,v:e[0]-e[1])
+add_pattern(('_','*','_'), global_pattern_tree, lambda e,v:e[0]*e[1])
+add_pattern(('_','/','_'), global_pattern_tree, lambda e,v:e[0]//e[1])
+add_pattern(('_','%','_'), global_pattern_tree, lambda e,v:e[0]%e[1])
+add_pattern(('_','<=','_'), global_pattern_tree, lambda e,v:'-true-' if e[0]<=e[1]else '-false-')
+add_pattern(('_','<','_'), global_pattern_tree, lambda e,v:'-true-' if e[0]<e[1]else '-false-')
+add_pattern(('_','>','_'), global_pattern_tree, lambda e,v:'-true-' if e[0]>e[1] else '-false-')
+add_pattern(('_','::','-nil-'), global_pattern_tree, lambda a,v:[a[0]])
+add_pattern(('_','::','_'), global_pattern_tree, lambda e,v:[e[0]]+e[1])
+add_pattern(('head','_'), global_pattern_tree, lambda e,v: () if e[0]=='-nil-' else e[0][0])
+add_pattern(('tail','_'), global_pattern_tree, lambda e,v:'-nil-' if e[0][1:]==[] else e[0][1:])
 
 
 
@@ -61,7 +61,7 @@ def match(l, acc, tree, values):
                     # print('fn match', acc, tree[word][0])
                     pars = [acc[i] for i in range(len(acc)) if tree[word][0][i]=='_']
                     # print('fn match', pars, acc)
-                    return FULL, tree[word][1](pars)
+                    return FULL, tree[word][1](pars, values)
             else:
                 subtree = { **tree[word], **subtree}
     if subtree != {}:
@@ -119,9 +119,9 @@ def evaluate(e, tree=global_pattern_tree,values=global_values):
             if func:
                 # print('evaluate, func', left)
                 pattern = [ '_' if isinstance(x, str) and ':' in x and len(x)>1 else x for x in left]                                
-                add_pattern(tuple(pattern), tree, lambda e: evaluate(tuple(right),global_pattern_tree, {**values,**params_from(e,left)}))
+                add_pattern(tuple(pattern), tree, lambda e,v: evaluate(tuple(right),global_pattern_tree, {**v,**params_from(e,left)}))
                 return ()
-            add_pattern(tuple(left),tree,lambda e:evaluate(tuple(right),tree,values))
+            add_pattern(tuple(left),tree,lambda e,v:evaluate(tuple(right),tree,values))
         return ()
 
     remaining = e

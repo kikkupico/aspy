@@ -1,13 +1,17 @@
 refer lib
 
-:p each :x of :l =  
+unroll* :l =
   case
     l == []
-    []
-    p == []
-    l
+    ()
     -true-
-    unroll-bound-p ( x ) ( head l ) p :: ( p each x of ( tail l ) )
+    ( head l ) ( unroll ( tail l ) )
 
+sub :_ =
+  unroll* ( [ p + 2 ] )
 
-( ' list ( list x ) each y of ( 1 to 3 ) ) each x of ( [ [ 1 2 ] [ 3 4 ] ] )
+dubsub :_ =
+  p = 7
+  sub ads
+
+dubsub as

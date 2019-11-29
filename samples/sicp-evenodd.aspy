@@ -1,0 +1,17 @@
+refer lib
+
+even :n ? =
+  case
+    n == 0
+    -true-
+    -true-
+    odd ( n - 1 ) ?
+
+odd :n ? =
+  case
+    n == 0
+    -false-
+    -true-
+    even ( n - 1 ) ?
+
+even 3 ?
