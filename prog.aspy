@@ -1,17 +1,11 @@
 refer lib
 
-unroll* :l =
+:p for each :v in :l =
+  v = head l
   case
     l == []
-    ()
+    []
     -true-
-    ( head l ) ( unroll ( tail l ) )
+    unroll p :: ( p for each v in ( tail l ) )
 
-sub :_ =
-  unroll* ( [ p + 2 ] )
-
-dubsub :_ =
-  p = 7
-  sub ads
-
-dubsub as
+[ list [ x :: y :: [] ] for each x in list ( 1 to 3 ) ] for each y in ( [ a b c ] )

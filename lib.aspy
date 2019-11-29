@@ -187,7 +187,11 @@ unroll :l =
     l == []
     ()
     word ( head l ) ?
-    ( head l ) ( unroll ( tail l ) )
+    case
+      head l == list
+      head ( tail l ) ( unroll ( tail ( tail l ) ) )
+      -true-
+      ( head l ) ( unroll ( tail l ) )
     -true-
     unroll ( head l ) ( unroll ( tail l ) )
 
@@ -266,3 +270,11 @@ unroll-bound-p :v :x :l =
 :exp in :q partial-where 0 :l :x  = exp in q partial-where 0 ( ( ( head l ) ++ x ) ( :: [] ) )
 :exp in :q partial-where :n :l :x = exp in q partial-where n ( ( ( head l ) ++ x ) ( :: ( tail l ) ) )
 
+
+:p for each :v in :l =
+  v = head l
+  case
+    l == []
+    []
+    -true-
+    unroll p :: ( p for each v in ( tail l ) )
